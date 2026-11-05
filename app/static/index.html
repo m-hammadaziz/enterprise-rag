@@ -387,7 +387,7 @@ function compareGrid(results) {
 
 /* ------------------------------------------------------------ actions */
 function hero() {
-  $("#wrap").innerHTML = `<div class="hero"><h2>Ask the company knowledge base</h2>
+  $("#wrap").innerHTML = `<div class="hero"><h2>Ask the company knowledge database</h2>
     <p>Answers come only from documents the selected person may read, with sources for every fact. If the evidence isn't there, the agent says so instead of guessing.</p></div>
     <div class="groups">${EXAMPLES.map(g => `<div class="group"><h3>${g.title}</h3><p>${g.note}</p>
       ${g.items.map(it => `<button class="ex" data-q="${esc(it.q)}" data-u="${it.u}">${esc(it.q)}<small>as ${it.u} — ${it.why}</small></button>`).join("")}</div>`).join("")}</div>`;
