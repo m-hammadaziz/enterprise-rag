@@ -1,0 +1,73 @@
+{
+  "_note": "Demo users and keys for local development only.",
+  "users": [
+    {
+      "name": "hammad",
+      "groups": [
+        "all-staff",
+        "engineering",
+        "finance",
+        "legal",
+        "hr",
+        "sales",
+        "exec"
+      ],
+      "is_admin": true,
+      "demo_api_key": "demo-hammad"
+    },
+    {
+      "name": "alice",
+      "groups": [
+        "all-staff",
+        "engineering"
+      ],
+      "demo_api_key": "demo-alice"
+    },
+    {
+      "name": "bob",
+      "groups": [
+        "all-staff",
+        "finance"
+      ],
+      "demo_api_key": "demo-bob"
+    },
+    {
+      "name": "carol",
+      "groups": [
+        "all-staff",
+        "legal",
+        "hr"
+      ],
+      "demo_api_key": "demo-carol"
+    },
+    {
+      "name": "dave",
+      "groups": [
+        "all-staff",
+        "sales"
+      ],
+      "demo_api_key": "demo-dave"
+    },
+    {
+      "name": "erin",
+      "groups": [
+        "all-staff",
+        "engineering",
+        "finance",
+        "legal",
+        "hr",
+        "sales",
+        "exec"
+      ],
+      "is_admin": true,
+      "demo_api_key": "demo-erin"
+    },
+    {
+      "name": "frank",
+      "groups": [
+        "contractors"
+      ],
+      "demo_api_key": "demo-frank"
+    }
+  ]
+}

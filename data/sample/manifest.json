@@ -1,0 +1,210 @@
+{
+  "documents": [
+    {
+      "path": "docs/employee-handbook.pdf",
+      "allowed_groups": [
+        "all-staff"
+      ],
+      "title": "Corvane Employee Handbook 2026",
+      "metadata": {
+        "slug": "employee-handbook",
+        "description": "Working hours, leave, remote work, conduct"
+      }
+    },
+    {
+      "path": "docs/travel-expense-policy.docx",
+      "allowed_groups": [
+        "all-staff"
+      ],
+      "title": "Travel and Expense Policy",
+      "metadata": {
+        "slug": "travel-expense-policy",
+        "description": "Flights, hotels, per diem, approval limits, reimbursement"
+      }
+    },
+    {
+      "path": "docs/information-security-policy.pdf",
+      "allowed_groups": [
+        "all-staff",
+        "contractors"
+      ],
+      "title": "Information Security Policy",
+      "metadata": {
+        "slug": "information-security-policy",
+        "description": "Passwords, MFA, devices, data classification, incident reporting"
+      }
+    },
+    {
+      "path": "docs/incident-response-runbook.md",
+      "allowed_groups": [
+        "engineering"
+      ],
+      "title": "Incident Response Runbook",
+      "metadata": {
+        "slug": "incident-response-runbook",
+        "description": "Severity levels, on-call, paging, postmortems"
+      }
+    },
+    {
+      "path": "docs/deployment-guide.html",
+      "allowed_groups": [
+        "engineering"
+      ],
+      "title": "Deployment Guide",
+      "metadata": {
+        "slug": "deployment-guide",
+        "description": "Release process, canary, freeze windows, rollback"
+      }
+    },
+    {
+      "path": "docs/platform-architecture.docx",
+      "allowed_groups": [
+        "engineering"
+      ],
+      "title": "Platform Architecture Overview",
+      "metadata": {
+        "slug": "platform-architecture",
+        "description": "Services, data stores, regions, SLOs"
+      }
+    },
+    {
+      "path": "docs/q3-2026-financial-report.pdf",
+      "allowed_groups": [
+        "finance",
+        "exec"
+      ],
+      "title": "Q3 2026 Financial Report",
+      "metadata": {
+        "slug": "q3-2026-financial-report",
+        "description": "Revenue, margin, operating expenses, cash for Q3 2026"
+      }
+    },
+    {
+      "path": "docs/fy2027-budget-plan.docx",
+      "allowed_groups": [
+        "finance",
+        "exec"
+      ],
+      "title": "FY2027 Budget Plan",
+      "metadata": {
+        "slug": "fy2027-budget-plan",
+        "description": "Department budgets and hiring plan for fiscal year 2027"
+      }
+    },
+    {
+      "path": "docs/data-retention-policy.html",
+      "allowed_groups": [
+        "all-staff"
+      ],
+      "title": "Data Retention Policy",
+      "metadata": {
+        "slug": "data-retention-policy",
+        "description": "How long records are kept and how they are deleted"
+      }
+    },
+    {
+      "path": "docs/skyline-hosting-contract-summary.pdf",
+      "allowed_groups": [
+        "legal"
+      ],
+      "title": "Skyline Cloud Hosting Contract Summary",
+      "metadata": {
+        "slug": "skyline-hosting-contract-summary",
+        "description": "Key terms of the master services agreement with Skyline Cloud Hosting"
+      }
+    },
+    {
+      "path": "docs/sales-playbook.md",
+      "allowed_groups": [
+        "sales"
+      ],
+      "title": "Sales Playbook",
+      "metadata": {
+        "slug": "sales-playbook",
+        "description": "Deal stages, discounts, approvals, commissions"
+      }
+    },
+    {
+      "path": "docs/product-pricing-faq.html",
+      "allowed_groups": [
+        "sales"
+      ],
+      "title": "Product Pricing FAQ",
+      "metadata": {
+        "slug": "product-pricing-faq",
+        "description": "Plans, list prices, add-ons"
+      }
+    },
+    {
+      "path": "docs/project-atlas-board-memo.docx",
+      "allowed_groups": [
+        "exec"
+      ],
+      "title": "Board Memo: Project Atlas",
+      "metadata": {
+        "slug": "project-atlas-board-memo",
+        "description": "Confidential acquisition proposal"
+      }
+    },
+    {
+      "path": "docs/contractor-onboarding-guide.md",
+      "allowed_groups": [
+        "contractors",
+        "all-staff"
+      ],
+      "title": "Contractor Onboarding Guide",
+      "metadata": {
+        "slug": "contractor-onboarding-guide",
+        "description": "Access, timesheets, invoicing and offboarding for contractors"
+      }
+    },
+    {
+      "path": "docs/benefits-overview.html",
+      "allowed_groups": [
+        "all-staff"
+      ],
+      "title": "Benefits Overview 2026",
+      "metadata": {
+        "slug": "benefits-overview",
+        "description": "Health insurance, pension, wellness, equipment"
+      }
+    },
+    {
+      "path": "datasets/kpi-monthly-2026.csv",
+      "allowed_groups": [
+        "all-staff"
+      ],
+      "title": "Company KPIs by Month (2026)",
+      "metadata": {
+        "slug": "kpi-monthly-2026",
+        "dataset": "kpi-monthly-2026",
+        "description": "Monthly ARR, logo churn, NPS and API uptime"
+      }
+    },
+    {
+      "path": "datasets/office-locations.csv",
+      "allowed_groups": [
+        "all-staff"
+      ],
+      "title": "Office Locations and Headcount",
+      "metadata": {
+        "slug": "office-locations",
+        "dataset": "office-locations",
+        "description": "Offices, cities, office leads and headcount"
+      }
+    },
+    {
+      "path": "datasets/compensation-bands.csv",
+      "allowed_groups": [
+        "hr",
+        "exec"
+      ],
+      "title": "Compensation Bands 2026 (Engineering)",
+      "metadata": {
+        "slug": "compensation-bands",
+        "dataset": "compensation-bands",
+        "description": "Salary ranges per engineering level, Berlin baseline"
+      }
+    }
+  ]
+}

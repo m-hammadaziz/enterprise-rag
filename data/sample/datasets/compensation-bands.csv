@@ -1,0 +1,6 @@
+level,title,salary_min_eur,salary_max_eur,equity_units
+L1,Associate Engineer,52000,64000,200
+L2,Software Engineer,62000,78000,400
+L3,Senior Software Engineer,76000,96000,800
+L4,Staff Engineer,94000,118000,1600
+L5,Principal Engineer,115000,140000,3000

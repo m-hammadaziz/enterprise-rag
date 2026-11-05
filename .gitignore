@@ -1,0 +1,10 @@
+.venv/
+venv/
+.env
+__pycache__/
+*.pyc
+data/raw/
+data/processed/
+eval/reports/*/
+.pytest_cache/
+publish_log.txt

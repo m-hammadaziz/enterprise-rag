@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enterprise Knowledge Agent</title>
+<style>
+:root{
+  --bg:#f4f6f9; --panel:#ffffff; --panel-2:#f8f9fb; --ink:#141821; --ink-2:#4a5263; --muted:#7a8394;
+  --line:#e3e7ee; --accent:#2f5bd3; --accent-ink:#ffffff; --accent-soft:#e8eefc;
+  --ok:#137a48; --ok-soft:#e5f5ec; --warn:#a24a0d; --warn-soft:#fcefe3; --err:#b42323; --err-soft:#fdeaea;
+  --chip:#eef1f6; --shadow:0 1px 2px rgba(16,24,40,.06),0 4px 16px rgba(16,24,40,.06);
+  --r:12px; --mono:ui-monospace,SFMono-Regular,Consolas,monospace;
+  --c1:#2f5bd3; --c2:#0f9d8a; --c3:#c27c0e; --c4:#8a4fd6; --c5:#d0476b;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0f1218; --panel:#171b23; --panel-2:#1c212b; --ink:#e9ecf2; --ink-2:#b5bccb; --muted:#8a93a5;
+  --line:#2a303c; --accent:#7ea1ff; --accent-ink:#0f1218; --accent-soft:#1e2a47;
+  --ok:#5fd394; --ok-soft:#143022; --warn:#f3a96b; --warn-soft:#3a2614; --err:#ff8a8a; --err-soft:#3a1717;
+  --chip:#232936; --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+  --c1:#7ea1ff; --c2:#4fd1bd; --c3:#f0b44c; --c4:#b892ff; --c5:#ff8aa8;
+}}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:14.5px/1.55 "Segoe UI",system-ui,-apple-system,sans-serif}
+button{font:inherit;cursor:pointer}
+.app{display:grid;grid-template-columns:300px 1fr;height:100vh}
+/* ---------- sidebar ---------- */
+aside{background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+.brand{padding:18px 18px 14px;border-bottom:1px solid var(--line)}
+.brand h1{font-size:16px;margin:0;display:flex;align-items:center;gap:8px}
+.logo{width:26px;height:26px;border-radius:7px;background:var(--accent);display:grid;place-items:center;color:var(--accent-ink);font-weight:700;font-size:13px}
+.health{margin-top:8px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block}
+.dot.on{background:var(--ok)} .dot.off{background:var(--err)}
+.side-scroll{overflow:auto;flex:1;padding:14px 12px 18px}
+.label{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:6px 6px 8px}
+.user{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:none;border:1px solid transparent;border-radius:10px;padding:9px 10px;color:inherit}
+.user:hover{background:var(--panel-2)}
+.user.sel{background:var(--accent-soft);border-color:var(--accent)}
+.av{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;color:#fff}
+.user b{display:block;font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}
+.chip{background:var(--chip);color:var(--ink-2);border-radius:99px;padding:1px 8px;font-size:11.5px;white-space:nowrap}
+.chip.admin{background:var(--warn-soft);color:var(--warn)}
+.custom{margin:10px 6px 0;display:flex;gap:6px}
+.custom input{flex:1;min-width:0;border:1px solid var(--line);background:var(--panel-2);color:var(--ink);border-radius:8px;padding:7px 9px;font:inherit;font-size:13px}
+.docs{margin-top:18px}
+.doc{display:flex;gap:9px;align-items:center;padding:6px 8px;border-radius:8px;font-size:13px;color:var(--ink-2)}
+.doc:hover{background:var(--panel-2)}
+.ft{flex:none;font-size:10px;font-weight:700;border-radius:5px;padding:2px 5px;min-width:36px;text-align:center;color:#fff}
+.ft.pdf{background:#c2410c}.ft.docx{background:#1d4ed8}.ft.html{background:#0f766e}.ft.md{background:#6b7280}.ft.csv{background:#15803d}.ft.txt{background:#6b7280}
+.doc span.t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* ---------- main ---------- */
+main{display:flex;flex-direction:column;min-height:0;min-width:0}
+.topbar{display:flex;align-items:center;gap:12px;padding:12px 22px;border-bottom:1px solid var(--line);background:var(--panel)}
+.topbar .who{font-size:13.5px;color:var(--ink-2)} .topbar .who b{color:var(--ink)}
+.spacer{flex:1}
+.toggle{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2);user-select:none}
+.switch{position:relative;width:36px;height:20px;border-radius:99px;background:var(--line);border:none;padding:0}
+.switch::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.15s}
+.switch.on{background:var(--accent)} .switch.on::after{left:18px}
+.ghost{background:none;border:1px solid var(--line);color:var(--ink-2);border-radius:8px;padding:6px 10px;font-size:13px}
+.ghost:hover{background:var(--panel-2)}
+.feed{flex:1;overflow:auto;padding:24px 22px 8px}
+.wrap{max-width:900px;margin:0 auto}
+/* empty state */
+.hero{text-align:center;padding:28px 0 10px}
+.hero h2{font-size:24px;margin:0 0 6px}
+.hero p{color:var(--ink-2);margin:0 auto;max-width:620px}
+.groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin:24px 0}
+.group{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px;box-shadow:var(--shadow)}
+.group h3{margin:0 0 4px;font-size:14px}
+.group p{margin:0 0 10px;color:var(--muted);font-size:12.5px}
+.ex{display:block;width:100%;text-align:left;background:var(--panel-2);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:8px 10px;margin-top:6px;font-size:13px}
+.ex:hover{border-color:var(--accent)}
+.ex small{display:block;color:var(--muted);font-size:11.5px}
+/* conversation */
+.turn{margin-bottom:26px}
+.q{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
+.q .bubble{background:var(--accent);color:var(--accent-ink);padding:9px 14px;border-radius:14px 14px 14px 4px;max-width:85%;font-weight:500}
+.q .meta{font-size:12px;color:var(--muted);margin-top:3px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.status{display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:13px;font-weight:600;border-bottom:1px solid var(--line)}
+.status.ok{background:var(--ok-soft);color:var(--ok)} .status.no{background:var(--warn-soft);color:var(--warn)} .status.err{background:var(--err-soft);color:var(--err)}
+.status .r{margin-left:auto;font-weight:500;font-size:12px;opacity:.85}
+.answer{padding:16px 18px;font-size:15.5px;line-height:1.65}
+.answer p{margin:0 0 8px} .answer ul{margin:4px 0 8px 18px;padding:0}
+.cite{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 5px;margin:0 1px;border-radius:6px;background:var(--accent-soft);color:var(--accent);font-size:11.5px;font-weight:700;vertical-align:2px;border:none}
+.cite:hover{background:var(--accent);color:var(--accent-ink)}
+.why{padding:0 18px 14px;color:var(--ink-2);font-size:13.5px}
+.why ul{margin:6px 0 0 18px;padding:0}
+.sources{padding:4px 18px 16px}
+.sources h4,.details h4{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:8px 0 8px}
+.src{display:flex;gap:12px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;background:var(--panel-2);transition:box-shadow .2s,border-color .2s}
+.src.flash{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.src .n{flex:none;width:24px;height:24px;border-radius:7px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-weight:700;font-size:12px}
+.src .t{font-weight:600}
+.src .loc{font-size:12px;color:var(--muted)}
+.src .snip{font-size:13px;color:var(--ink-2);margin-top:4px}
+.bar{height:5px;border-radius:9px;background:var(--line);margin-top:6px;overflow:hidden;max-width:180px}
+.bar i{display:block;height:100%;background:var(--ok)}
+details.details{border-top:1px solid var(--line)}
+details.details summary{padding:10px 18px;font-size:13px;color:var(--ink-2);cursor:pointer;list-style:none;display:flex;gap:14px;flex-wrap:wrap}
+details.details summary::-webkit-details-marker{display:none}
+details.details summary .k{color:var(--muted)}
+details.details[open] summary{border-bottom:1px solid var(--line)}
+.dbody{padding:6px 18px 16px;display:grid;gap:16px}
+.steps{display:flex;height:12px;border-radius:9px;overflow:hidden;background:var(--line)}
+.steps i{display:block;height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px;font-size:12.5px;color:var(--ink-2)}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.tools{display:grid;gap:6px}
+.tool{font-size:13px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.tool code{font-family:var(--mono);font-size:12px;background:var(--chip);padding:1px 6px;border-radius:5px}
+.tool .h{color:var(--muted);font-size:12px}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.kv div{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.kv b{display:block;font-size:15px} .kv span{font-size:11.5px;color:var(--muted)}
+/* compare grid */
+.cmp{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+.cmp .cell{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:12px;box-shadow:var(--shadow)}
+.cmp .head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.badge{font-size:11.5px;font-weight:700;border-radius:99px;padding:2px 8px;margin-left:auto}
+.badge.ok{background:var(--ok-soft);color:var(--ok)} .badge.no{background:var(--warn-soft);color:var(--warn)} .badge.err{background:var(--err-soft);color:var(--err)}
+.cmp .txt{font-size:13.5px;color:var(--ink-2)}
+.cmp .s{font-size:12px;color:var(--muted);margin-top:6px}
+/* loading */
+.loading{display:flex;align-items:center;gap:12px;padding:16px 18px;color:var(--ink-2)}
+.spin{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);border-top-color:var(--accent);animation:sp 0.8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+/* composer */
+.composer{padding:12px 22px 18px;background:linear-gradient(to top,var(--bg) 70%,transparent)}
+.box{max-width:900px;margin:0 auto;display:flex;gap:8px;align-items:flex-end;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:8px 8px 8px 14px;box-shadow:var(--shadow)}
+.box:focus-within{border-color:var(--accent)}
+textarea{flex:1;border:none;outline:none;resize:none;background:none;color:var(--ink);font:inherit;font-size:15px;max-height:160px;padding:6px 0}
+.send{background:var(--accent);color:var(--accent-ink);border:none;border-radius:10px;padding:9px 16px;font-weight:600}
+.send:disabled{opacity:.5;cursor:default}
+.hint{max-width:900px;margin:6px auto 0;font-size:12px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap}
+select.mode{border:1px solid var(--line);background:var(--panel-2);color:var(--ink-2);border-radius:8px;padding:5px 8px;font:inherit;font-size:12.5px}
+/* mobile */
+.menu{display:none}
+@media (max-width:860px){
+  .app{grid-template-columns:1fr}
+  aside{position:fixed;inset:0 25% 0 0;z-index:5;transform:translateX(-105%);transition:.2s;box-shadow:var(--shadow)}
+  aside.open{transform:none}
+  .menu{display:inline-block}
+  .feed,.composer,.topbar{padding-left:14px;padding-right:14px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside id="side">
+    <div class="brand">
+      <h1><span class="logo">K</span> Knowledge Agent</h1>
+      <div class="health" id="health"><span class="dot"></span> connecting…</div>
+    </div>
+    <div class="side-scroll">
+      <div class="label">Ask as</div>
+      <div id="users"></div>
+      <div class="custom">
+        <input id="customKey" placeholder="or paste an API key…" autocomplete="off">
+        <button class="ghost" id="useKey">Use</button>
+      </div>
+      <div class="docs">
+        <div class="label" id="docsLabel">Documents you can read</div>
+        <div id="docs"></div>
+      </div>
+    </div>
+  </aside>
+
+  <main>
+    <div class="topbar">
+      <button class="ghost menu" id="menu">☰</button>
+      <div class="who" id="who">—</div>
+      <div class="spacer"></div>
+      <div class="toggle" title="Ask the same question as every demo user to see how permissions change the answer">
+        <button class="switch" id="cmpSwitch" aria-label="Compare all users"></button> Compare all users
+      </div>
+      <button class="ghost" id="clear">Clear</button>
+    </div>
+
+    <div class="feed" id="feed"><div class="wrap" id="wrap"></div></div>
+
+    <div class="composer">
+      <div class="box">
+        <textarea id="q" rows="1" placeholder="Ask a question about company documents…"></textarea>
+        <button class="send" id="send">Ask</button>
+      </div>
+      <div class="hint">
+        <span>Enter to send · Shift+Enter for a new line</span>
+        <span>Search mode
+          <select class="mode" id="mode">
+            <option value="hybrid_rerank">Hybrid + rerank (best)</option>
+            <option value="hybrid">Hybrid</option>
+            <option value="vector">Vector only</option>
+            <option value="keyword">Keyword only</option>
+          </select>
+        </span>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+const USERS = [
+  {name:"hammad", key:"demo-hammad", groups:["all groups","exec"], role:"Project Owner", admin:true, color:"#0e7490"},
+  {name:"alice", key:"demo-alice", groups:["all-staff","engineering"], role:"Engineer", color:"var(--c1)"},
+  {name:"bob",   key:"demo-bob",   groups:["all-staff","finance"],     role:"Finance",  color:"var(--c2)"},
+  {name:"carol", key:"demo-carol", groups:["all-staff","legal","hr"],  role:"Legal & HR",color:"var(--c3)"},
+  {name:"dave",  key:"demo-dave",  groups:["all-staff","sales"],       role:"Sales",    color:"var(--c4)"},
+  {name:"erin",  key:"demo-erin",  groups:["all groups","exec"],       role:"Executive", admin:true, color:"var(--c5)"},
+  {name:"frank", key:"demo-frank", groups:["contractors"],             role:"Contractor",color:"#6b7280"},
+];
+const EXAMPLES = [
+  {title:"Permissions in action", note:"Same question, different people. Try it with Compare on.", items:[
+    {q:"What was total revenue in Q3 2026?", u:"bob", why:"finance can read the Q3 report"},
+    {q:"What is the proposed purchase price for Project Atlas?", u:"hammad", why:"exec-only board memo"},
+  ]},
+  {title:"Cited answers", note:"Answers point to the exact document, section and page.", items:[
+    {q:"How many days of paid annual leave do full-time employees get?", u:"alice", why:"PDF handbook"},
+    {q:"What is the nightly hotel limit in high-cost cities like London?", u:"bob", why:"Word document"},
+    {q:"What is the headcount of the Lisbon office?", u:"dave", why:"comes from a CSV table"},
+  ]},
+  {title:"Refuses instead of guessing", note:"No evidence → no answer.", items:[
+    {q:"What is the Wi-Fi password for the Berlin office?", u:"alice", why:"not in any document"},
+    {q:"How many days of paid bereavement leave do employees get?", u:"dave", why:"not covered"},
+  ]},
+];
+const STEP_COLORS = {plan:"var(--c4)", embed:"var(--c1)", db:"var(--c2)", rerank:"var(--c3)", generate:"var(--c5)"};
+const STEP_NAMES = {plan:"Plan (LLM picks sources)", embed:"Embed question", db:"Database search", rerank:"Rerank", generate:"Write answer"};
+const TOOL_NAMES = {search_knowledge_base:"Searched documents", search_structured_data:"Searched data tables", list_documents:"Listed documents"};
+
+let current = USERS[0];
+let customKey = null;
+let compare = false;
+let busy = false;
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmtMs = ms => ms >= 1000 ? (ms/1000).toFixed(1) + " s" : Math.round(ms) + " ms";
+const keyOf = () => customKey || current.key;
+
+async function api(path, opts = {}, key = keyOf()) {
+  const r = await fetch(path, {...opts, headers: {"X-API-Key": key, "Content-Type": "application/json", ...(opts.headers || {})}});
+  let body = null; try { body = await r.json(); } catch {}
+  if (!r.ok) throw new Error((body && (body.detail?.[0]?.msg || body.detail)) || `HTTP ${r.status}`);
+  return body;
+}
+
+/* ------------------------------------------------------------ sidebar */
+function renderUsers() {
+  $("#users").innerHTML = USERS.map(u => `
+    <button class="user ${!customKey && u === current ? "sel" : ""}" data-u="${u.name}">
+      <span class="av" style="background:${u.color}">${u.name[0].toUpperCase()}</span>
+      <span><b>${u.name} <span style="font-weight:400;color:var(--muted);font-size:12.5px">· ${u.role}</span></b>
+        <span class="chips">${u.groups.map(g => `<span class="chip">${esc(g)}</span>`).join("")}${u.admin ? '<span class="chip admin">admin</span>' : ""}</span>
+      </span>
+    </button>`).join("");
+  document.querySelectorAll(".user").forEach(b => b.onclick = () => {
+    current = USERS.find(u => u.name === b.dataset.u); customKey = null; $("#customKey").value = "";
+    renderUsers(); refreshUser(); $("#side").classList.remove("open");
+  });
+}
+
+async function refreshUser() {
+  $("#who").innerHTML = customKey ? "Asking with a custom API key" :
+    `Asking as <b>${current.name}</b> · ${current.role}`;
+  $("#docs").innerHTML = `<div class="doc">loading…</div>`;
+  try {
+    if (customKey) { const me = await api("/me"); $("#who").innerHTML = `Asking as <b>${esc(me.name)}</b> · ${esc(me.groups.join(", "))}`; }
+    const d = (await api("/documents?limit=200")).documents;
+    $("#docsLabel").textContent = `Documents you can read (${d.length})`;
+    $("#docs").innerHTML = d.length ? d.map(x => `<div class="doc" title="${esc(x.title)}"><span class="ft ${esc(x.doc_type)}">${esc(x.doc_type.toUpperCase())}</span><span class="t">${esc(x.title)}</span></div>`).join("")
+      : `<div class="doc">No documents — run ingestion first.</div>`;
+  } catch (e) {
+    $("#docs").innerHTML = `<div class="doc" style="color:var(--err)">${esc(e.message)}${/API key/i.test(e.message) ? " — run: python -m scripts.seed_users" : ""}</div>`;
+  }
+}
+
+async function refreshHealth() {
+  try {
+    const h = await (await fetch("/health")).json();
+    $("#health").innerHTML = `<span class="dot on"></span> ${h.documents} docs · ${h.chunks} chunks · ${h.records} rows
+      <span class="chip">${h.llm_mode === "llm" ? "LLM on" : "offline mode"}</span>`;
+  } catch { $("#health").innerHTML = `<span class="dot off"></span> API not reachable`; }
+}
+
+/* ------------------------------------------------------------ rendering */
+function renderAnswerText(text, sids) {
+  let html = esc(text.trim())
+    .replace(/\*\*(.+?)\*\*/g, "<b>$1</b>")
+    .replace(/\[(S\d+(?:\s*,\s*S\d+)*)\]/g, (_, ids) =>
+      ids.split(/\s*,\s*/).map(id => sids.has(id) ? `<button class="cite" data-sid="${id}">${id.slice(1)}</button>` : "").join(""));
+  const lines = html.split(/\n/);
+  let out = "", inList = false;
+  for (const l of lines) {
+    const m = l.match(/^\s*[-*•]\s+(.*)/);
+    if (m) { if (!inList) { out += "<ul>"; inList = true; } out += `<li>${m[1]}</li>`; continue; }
+    if (inList) { out += "</ul>"; inList = false; }
+    if (l.trim()) out += `<p>${l}</p>`;
+  }
+  return out + (inList ? "</ul>" : "");
+}
+
+function reasonText(r) {
+  if (!r) return "No supporting evidence was found.";
+  if (/no matching sources/.test(r)) return "Nothing in the documents you can access matched this question.";
+  if (/below threshold/.test(r)) return "The closest passages you can access weren't relevant enough to answer from.";
+  if (/insufficient/.test(r)) return "The AI read the best passages and found they don't actually answer the question.";
+  if (/no valid citations/.test(r)) return "The drafted answer couldn't be backed by any source, so it was discarded.";
+  return r;
+}
+
+function timingBlock(t) {
+  const parts = ["plan","embed","db","rerank","generate"].map(k => [k, t[k + "_ms"] || 0]).filter(([,v]) => v > 0);
+  const total = t.total_ms || parts.reduce((a,[,v]) => a + v, 0) || 1;
+  return `<div><h4>Where the time went · ${fmtMs(total)} total</h4>
+    <div class="steps">${parts.map(([k,v]) => `<i style="width:${100*v/total}%;background:${STEP_COLORS[k]}" title="${STEP_NAMES[k]}: ${fmtMs(v)}"></i>`).join("")}</div>
+    <div class="legend">${parts.map(([k,v]) => `<span><i style="background:${STEP_COLORS[k]}"></i>${STEP_NAMES[k]} ${fmtMs(v)}</span>`).join("")}</div></div>`;
+}
+
+function detailsBlock(r) {
+  const tools = r.tool_calls.filter(t => TOOL_NAMES[t.name]);
+  const u = r.usage;
+  return `<details class="details">
+    <summary><span>▸ How this answer was produced</span>
+      <span><span class="k">time</span> ${fmtMs(r.timings.total_ms)}</span>
+      <span><span class="k">searches</span> ${tools.length}</span>
+      <span><span class="k">cost</span> $${u.cost_usd.toFixed(5)}</span></summary>
+    <div class="dbody">
+      <div><h4>Searches the agent ran</h4><div class="tools">${tools.map(t => `
+        <div class="tool"><span class="chip">round ${t.round}</span> ${TOOL_NAMES[t.name]}
+          <code>${esc(t.arguments.query || "(all)")}</code><span class="h">${t.hits ?? 0} hits${t.error ? " · error: " + esc(t.error) : ""}</span></div>`).join("") || "<span class='h'>none</span>"}
+      </div>${r.rounds > 1 ? `<div class="h" style="font-size:12.5px;color:var(--muted);margin-top:6px">The first search wasn't good enough, so the agent rephrased and searched again.</div>` : ""}</div>
+      ${timingBlock(r.timings)}
+      <div class="kv">
+        <div><b>${r.llm_mode === "llm" ? "LLM" : "Offline"}</b><span>answer mode</span></div>
+        <div><b>${u.llm_calls}</b><span>LLM calls</span></div>
+        <div><b>${u.input_tokens.toLocaleString()} / ${u.output_tokens.toLocaleString()}</b><span>tokens in / out</span></div>
+        <div><b>$${u.cost_usd.toFixed(5)}</b><span>cost</span></div>
+      </div>
+    </div></details>`;
+}
+
+function answerCard(r) {
+  const sids = new Set(r.citations.map(c => c.sid));
+  if (r.abstained) {
+    const near = r.retrieved.slice(0, 3);
+    return `<div class="card">
+      <div class="status no">⊘ Not answered — no evidence you have access to<span class="r">${fmtMs(r.timings.total_ms)}</span></div>
+      <div class="answer"><p>I can't answer this from the documents <b>you</b> are allowed to read, so I won't guess.</p></div>
+      <div class="why"><b>Why:</b> ${esc(reasonText(r.abstain_reason))}
+        ${near.length ? `<div style="margin-top:6px">Closest passages checked: <ul>${near.map(s => `<li>${esc(s.title)}${s.section ? " › " + esc(s.section) : ""}</li>`).join("")}</ul></div>` : ""}
+        ${r.rejected_draft ? `<details style="margin-top:6px"><summary style="cursor:pointer">Show the AI's discarded draft</summary><div style="margin-top:4px;padding:8px 10px;border-radius:8px;background:var(--panel-2);border:1px solid var(--line);font-size:13px">${esc(r.rejected_draft)}</div></details>` : ""}
+        <div style="margin-top:6px;color:var(--muted)">If you expected an answer, the information may live in a document you don't have access to — or the question needs rephrasing.</div>
+      </div>
+      ${detailsBlock(r)}</div>`;
+  }
+  return `<div class="card">
+    <div class="status ok">✓ Answered from ${r.citations.length} source${r.citations.length === 1 ? "" : "s"}<span class="r">${fmtMs(r.timings.total_ms)}</span></div>
+    <div class="answer">${renderAnswerText(r.answer, sids)}</div>
+    <div class="sources"><h4>Sources</h4>${r.citations.map(c => {
+      const full = r.retrieved.find(s => s.sid === c.sid) || c;
+      const loc = [c.section, c.page ? "page " + c.page : null, c.version ? "v" + c.version : null].filter(Boolean).map(esc).join(" · ");
+      const support = Math.round(100 * (c.support ?? 0));
+      return `<div class="src" data-src="${c.sid}">
+        <span class="n">${c.sid.slice(1)}</span>
+        <div style="min-width:0;flex:1"><div class="t">${esc(c.title)}</div><div class="loc">${loc}</div>
+          <div class="snip">${esc((full.snippet || "").slice(0, 260))}${(full.snippet || "").length > 260 ? "…" : ""}</div>
+          <div class="bar" title="${support}% of the cited sentence's words appear in this source"><i style="width:${support}%"></i></div></div>
+      </div>`; }).join("")}</div>
+    ${detailsBlock(r)}</div>`;
+}
+
+function compareGrid(results) {
+  return `<div class="cmp">${results.map(({u, r, err}) => {
+    const badge = err ? `<span class="badge err">error</span>` : r.abstained ? `<span class="badge no">refused</span>` : `<span class="badge ok">answered</span>`;
+    const body = err ? esc(err) : r.abstained ? "No evidence this user is allowed to read." :
+      esc(r.answer.replace(/\[S\d+(?:\s*,\s*S\d+)*\]/g, "").slice(0, 220));
+    const src = !err && !r.abstained ? `<div class="s">${[...new Set(r.citations.map(c => c.title))].map(esc).join(" · ")}</div>` : "";
+    return `<div class="cell"><div class="head"><span class="av" style="background:${u.color};width:24px;height:24px;font-size:11px">${u.name[0].toUpperCase()}</span>
+      <b>${u.name}</b><span style="color:var(--muted);font-size:12px">${u.role}</span>${badge}</div>
+      <div class="txt">${body}</div>${src}</div>`; }).join("")}</div>`;
+}
+
+/* ------------------------------------------------------------ actions */
+function hero() {
+  $("#wrap").innerHTML = `<div class="hero"><h2>Ask the company knowledge base</h2>
+    <p>Answers come only from documents the selected person may read, with sources for every fact. If the evidence isn't there, the agent says so instead of guessing.</p></div>
+    <div class="groups">${EXAMPLES.map(g => `<div class="group"><h3>${g.title}</h3><p>${g.note}</p>
+      ${g.items.map(it => `<button class="ex" data-q="${esc(it.q)}" data-u="${it.u}">${esc(it.q)}<small>as ${it.u} — ${it.why}</small></button>`).join("")}</div>`).join("")}</div>`;
+  document.querySelectorAll(".ex").forEach(b => b.onclick = () => {
+    current = USERS.find(u => u.name === b.dataset.u); customKey = null; renderUsers(); refreshUser();
+    $("#q").value = b.dataset.q; ask();
+  });
+}
+
+const LOADING_STEPS = ["Planning which sources to search…", "Searching documents you can access…", "Reranking the best passages…", "Writing a cited answer…", "Checking every citation…"];
+
+async function ask() {
+  const question = $("#q").value.trim();
+  if (!question || busy) return;
+  if ($(".hero")) $("#wrap").innerHTML = "";
+  busy = true; $("#send").disabled = true; $("#q").value = ""; autosize();
+  const asWho = customKey ? "custom key" : current.name;
+  const turn = document.createElement("div");
+  turn.className = "turn";
+  turn.innerHTML = `<div class="q"><span class="av" style="background:${compare ? "var(--accent)" : (customKey ? "#6b7280" : current.color)}">${compare ? "★" : asWho[0].toUpperCase()}</span>
+    <div><div class="bubble">${esc(question)}</div><div class="meta">${compare ? "asked as every demo user" : "asked as " + esc(asWho)} · ${$("#mode").selectedOptions[0].text}</div></div></div>
+    <div class="slot"><div class="card"><div class="loading"><span class="spin"></span><span class="lt">${LOADING_STEPS[0]}</span></div></div></div>`;
+  $("#wrap").appendChild(turn);
+  turn.scrollIntoView({behavior:"smooth", block:"start"});
+  let i = 0; const timer = setInterval(() => { i = Math.min(i + 1, LOADING_STEPS.length - 1); const el = turn.querySelector(".lt"); if (el) el.textContent = LOADING_STEPS[i]; }, 1800);
+  const body = JSON.stringify({question, mode: $("#mode").value});
+  try {
+    if (compare) {
+      const results = await Promise.all(USERS.map(u => api("/ask", {method:"POST", body}, u.key).then(r => ({u, r})).catch(e => ({u, err: e.message}))));
+      turn.querySelector(".slot").innerHTML = compareGrid(results);
+    } else {
+      const r = await api("/ask", {method:"POST", body});
+      turn.querySelector(".slot").innerHTML = answerCard(r);
+      turn.querySelectorAll(".cite").forEach(b => b.onclick = () => {
+        const s = turn.querySelector(`[data-src="${b.dataset.sid}"]`);
+        if (s) { s.scrollIntoView({behavior:"smooth", block:"center"}); s.classList.add("flash"); setTimeout(() => s.classList.remove("flash"), 1400); }
+      });
+    }
+  } catch (e) {
+    turn.querySelector(".slot").innerHTML = `<div class="card"><div class="status err">Something went wrong</div><div class="answer">${esc(e.message)}</div></div>`;
+  } finally {
+    clearInterval(timer); busy = false; $("#send").disabled = false; $("#q").focus();
+  }
+}
+
+function autosize() { const t = $("#q"); t.style.height = "auto"; t.style.height = Math.min(t.scrollHeight, 160) + "px"; }
+
+$("#q").addEventListener("input", autosize);
+$("#q").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); ask(); } });
+$("#send").onclick = ask;
+$("#clear").onclick = hero;
+$("#menu").onclick = () => $("#side").classList.toggle("open");
+$("#cmpSwitch").onclick = () => { compare = !compare; $("#cmpSwitch").classList.toggle("on", compare); };
+$("#useKey").onclick = () => { const k = $("#customKey").value.trim(); if (!k) return; customKey = k; renderUsers(); refreshUser(); };
+
+renderUsers(); refreshUser(); refreshHealth(); hero();
+setInterval(refreshHealth, 30000);
+</script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!doctype html><html><head><meta charset='utf-8'><title>Deployment Guide</title></head><body>
+<nav><a href='/'>Intranet home</a> | <a href='/policies'>Policies</a></nav><main>
+<h1>Deployment Guide</h1>
+<h2>Release cadence</h2>
+<p>Production deploys run on a continuous release train. Services deploy through the Foundry pipeline, which runs unit tests, integration tests and a security scan before any production rollout.</p>
+<p>Every change needs one approving code review. Changes to payment or authentication services need two approving reviews, one of them from a code owner.</p>
+<h2>Canary rollout</h2>
+<p>New versions first receive 5 percent of traffic for 20 minutes. If the error rate stays below 1 percent and p95 latency does not increase by more than 10 percent, the rollout proceeds to 25 percent, then 50 percent, then 100 percent.</p>
+<p>Automated canary analysis aborts and rolls back the deploy if either threshold is breached.</p>
+<h2>Deploy freezes</h2>
+<p>There are no production deploys on Fridays after 14:00 UTC or during weekends. A company-wide code freeze applies from 20 December to 3 January. Emergency fixes during a freeze need approval from the VP of Engineering.</p>
+<h2>Feature flags</h2>
+<p>New user-facing features must ship behind a feature flag managed in Flagpole. Flags that have been fully rolled out for more than 60 days must be removed from the code.</p>
+<h2>Rollback</h2>
+<p>Any engineer can roll back a service with the command foundry rollback &lt;service&gt; &lt;version&gt;. A rollback typically completes in under 4 minutes.</p>
+</main><footer>Corvane Systems intranet - internal use only</footer></body></html>
